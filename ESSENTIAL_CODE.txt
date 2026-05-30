@@ -1,0 +1,742 @@
+/**
+ * ESSENTIAL_CODE.txt - Visit Indonesia Cinematic Parallax - Comprehensive Code Summary
+ *
+ * This file contains all essential code for the cinematic parallax website,
+ * including global styles, custom hooks, motion utilities, components for
+ * Hero, Destinations, and TravelTimeLine sections, Custom Cursor,
+ * and Lenis smooth scroll integration.
+ *
+ * Designed to be production-ready with minimal placeholders.
+ *
+ * -----------------------------------------------------------------------------
+ * CONTENT OVERVIEW:
+ * 1.  Global CSS (index.css additions)
+ * 2.  src/hooks/use-parallax.ts
+ * 3.  src/lib/motion-presets.ts
+ * 4.  src/components/CustomCursor.tsx
+ * 5.  src/App.tsx (Root Layout & Lenis Integration)
+ * 6.  src/sections/Hero.tsx (Cinematic Parallax with Z-Index Sandwich)
+ * 7.  src/sections/Destinations.tsx (Destination Cards)
+ * 8.  src/sections/TravelTimeLine.tsx (Brutalist Text & Multimedia Grid)
+ * -----------------------------------------------------------------------------
+ */
+
+// =============================================================================
+// 1. GLOBAL CSS ADDITIONS (For src/index.css)
+//    - Add these styles to your existing src/index.css or a global stylesheet.
+// =============================================================================
+
+/* Custom Cursor Styles */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 30px; /* Adjust size as needed */
+  height: 30px; /* Adjust size as needed */
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+  mix-blend-mode: exclusion; /* Crucial for blend effect */
+  pointer-events: none; /* Important: prevents cursor from blocking clicks */
+  z-index: 9999; /* Ensure it's always on top */
+  transition: transform 0.1s ease-out, width 0.2s ease, height 0.2s ease, background-color 0.2s ease;
+  transform: translate(-50%, -50%); /* Center the cursor */
+}
+
+/* Optional: Enlarge cursor on hover interactive elements */
+a:hover .custom-cursor,
+button:hover .custom-cursor,
+.interactive:hover .custom-cursor {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+
+// =============================================================================
+// 2. SRC/HOOKS/USE-PARALLAX.TS
+//    - Custom hook for Framer Motion parallax effects.
+// =============================================================================
+
+import { useTransform, MotionValue } from 'framer-motion';
+
+/**
+ * Custom hook to apply a parallax effect to a MotionValue.
+ * Moves an element in the opposite direction of scroll.
+ *
+ * @param value The Framer Motion MotionValue (e.g., scrollYProgress).
+ * @param distance The maximum distance (in pixels or %) the element should move.
+ * @returns A MotionValue representing the parallax-transformed value.
+ */
+export function useParallax(value: MotionValue<number>, distance: number | string) {
+  // If distance is a number, assume pixels. If string (e.g., '50%'), use it directly.
+  return useTransform(value, [0, 1], [`-${distance}`, `${distance}`]);
+}
+
+
+// =============================================================================
+// 3. SRC/LIB/MOTION-PRESETS.TS
+//    - Centralized motion presets for consistent animation timing and easing.
+// =============================================================================
+
+import { Transition } from 'framer-motion';
+
+/**
+ * Premium cinematic easing transition preset.
+ * Offers a smooth, fluid, and slightly delayed feel for animations.
+ */
+export const cinematicTransition: Transition = {
+  duration: 1.4,
+  ease: [0.6, 0.01, -0.05, 0.95], // Custom cubic-bezier for a unique feel
+};
+
+/**
+ * Shorter, snappier transition for quicker interactions.
+ */
+export const quickTransition: Transition = {
+  duration: 0.7,
+  ease: [0.25, 0.46, 0.45, 0.94], // A common performant ease-out
+};
+
+
+// =============================================================================
+// 4. SRC/COMPONENTS/CUSTOMCURSOR.TSX
+//    - Custom cursor component with mix-blend-mode.
+// =============================================================================
+
+import React, { useEffect, useState } from 'react';
+
+export const CustomCursor: React.FC = () => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      // Check if the target or any of its ancestors are interactive
+      const isInteractive = target.closest('a, button, .interactive') !== null;
+      setIsHovering(isInteractive);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseover', handleMouseOver);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseover', handleMouseOver);
+    };
+  }, []);
+
+  return (
+    <div
+      className="custom-cursor"
+      style={{
+        transform: `translate(${position.x}px, ${position.y}px) scale(${isHovering ? 1.5 : 1})`,
+        backgroundColor: isHovering ? 'rgba(255, 255, 255, 0.7)' : 'rgba(255, 255, 255, 0.5)',
+        width: isHovering ? '50px' : '30px',
+        height: isHovering ? '50px' : '30px',
+      }}
+    />
+  );
+};
+
+
+// =============================================================================
+// 5. SRC/APP.TSX (Root Layout & Lenis Integration)
+//    - Main application component, integrates Lenis and CustomCursor.
+// =============================================================================
+
+import { useEffect, useRef } from 'react';
+import Lenis from '@studio-freight/lenis'; // Assuming @studio-freight/lenis is installed
+import Navbar from './sections/Navbar';
+import Hero from './sections/Hero';
+import Destinations from './sections/Destinations';
+import TravelTimeLine from './sections/TravelTimeLine'; // Renamed from Experience for clarity
+import { CustomCursor } from './components/CustomCursor';
+
+export default function App() {
+  const lenisRef = useRef<Lenis | null>(null);
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      lerp: 0.08, // Adjust for smoother or snappier scroll
+      smoothWheel: true,
+      duration: 1.2, // Duration of the scroll animation
+    });
+
+    lenisRef.current = lenis;
+
+    // Request animation frame for Lenis scroll updates
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    // Clean up Lenis instance on component unmount
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
+  return (
+    <div className="relative bg-[#050505] min-h-screen">
+      <CustomCursor /> {/* Integrate CustomCursor */}
+      <Navbar />
+      <Hero />
+      <Destinations />
+      <TravelTimeLine /> {/* Use the new TravelTimeLine component */}
+      {/* Additional sections would go here */}
+    </div>
+  );
+}
+
+
+// =============================================================================
+// 6. SRC/SECTIONS/HERO.TSX (Cinematic Parallax with Z-Index Sandwich)
+//    - Fully implemented Hero section with foreground image for "sandwich" effect.
+// =============================================================================
+
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useParallax } from '../hooks/use-parallax'; // Re-use custom hook
+import { quickTransition } from '../lib/motion-presets'; // Re-use motion preset
+
+export default function Hero() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+
+  // Parallax for background image (moves slower)
+  const bgY = useParallax(scrollYProgress, 50); // Moves 50px up/down
+
+  // Parallax for text (moves faster, simulating it going "behind")
+  const textY = useParallax(scrollYProgress, 150); // Moves 150px up/down
+
+  // Parallax for foreground element (moves in opposite direction, "revealing" text)
+  // This value will be positive for moving down, creating the sandwich effect.
+  const fgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]); // Moves 20% down relative to its initial position
+
+  const columns = [
+    'Mount Kelimutu is a volcano located on Flores Island, NTT Province, Indonesia. The location of this mountain is precisely in Pemo Village',
+    'Nusa Penida Island is in the southeastern part of the mainland island of Bali.',
+    'The Raja Ampat Islands are a group of islands located in the western part of the Bird's Head peninsula on the island of New Guinea.',
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative w-full overflow-hidden"
+      style={{ minHeight: '110vh' }} // Ensure enough height for scroll effect
+    >
+      {/* Layer 0: Background Image (z-0) - Furthest back, slowest parallax */}
+      <motion.div
+        className="absolute inset-0 z-0 will-change-transform"
+        style={{ y: bgY }}
+      >
+        <img
+          src="/assets/hero-volcanic-landscape.jpg" // Ensure this image exists
+          alt="Indonesian volcanic landscape"
+          className="w-full h-full object-cover"
+          style={{ objectPosition: 'center 30%' }}
+          loading="eager" // Eager load for immediate cinematic impact
+        />
+      </motion.div>
+
+      {/* Layer 1: Dark Gradient Overlay (z-10) - Aesthetic overlay */}
+      <div
+        className="absolute inset-0 z-10"
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(5,5,5,0.1) 0%, rgba(5,5,5,0.3) 40%, rgba(5,5,5,0.75) 70%, #050505 100%)',
+        }}
+      />
+
+      {/* Layer 2: Hero Typography (z-20) - The text, goes behind foreground */}
+      <motion.div
+        className="absolute z-20 will-change-transform"
+        style={{
+          y: textY,
+          left: 'clamp(24px, 5vw, 80px)',
+          top: '18%', // Adjust vertical position as needed
+        }}
+      >
+        <h1
+          className="text-white uppercase font-display font-bold leading-[0.85] tracking-[-0.02em]"
+          style={{
+            fontSize: 'clamp(72px, 12vw, 180px)',
+            textShadow: '0 4px 40px rgba(0,0,0,0.5)',
+          }}
+        >
+          <span className="block">VISIT</span>
+          <span className="block">INDONESIA</span>
+        </h1>
+      </motion.div>
+
+      {/* Layer 3: Foreground Image (z-30) - The "sandwich" element, moves fastest, revealing text */}
+      {/* Make sure /assets/hero-foreground.png is a transparent PNG of the mountain tops or landscape element */}
+      <motion.div
+        className="absolute inset-0 z-30 pointer-events-none will-change-transform" // pointer-events-none so cursor can interact with elements behind it
+        style={{ y: fgY }}
+      >
+        <img
+          src="/assets/hero-foreground.png" // IMPORTANT: This should be a transparent PNG
+          alt="Foreground landscape elements"
+          className="w-full h-full object-cover object-bottom" // object-bottom aligns it to the bottom
+          loading="eager" // Eager load for immediate cinematic impact
+        />
+      </motion.div>
+
+      {/* Layer 4: Vertical Numeric Counter (z-40) - UI element, unaffected by parallax */}
+      <div
+        className="absolute z-40 hidden md:flex flex-col items-end gap-3"
+        style={{
+          right: '24px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+        }}
+      >
+        {['03', '04', '05', '06', '07'].map((num) => (
+          <div key={num} className="flex items-center gap-2">
+            <span
+              className="text-sm tracking-[0.05em]"
+              style={{
+                fontFamily: 'Inter, sans-serif',
+                fontWeight: num === '05' ? 700 : 400,
+                color: num === '05' ? '#FFFFFF' : '#A0A0A0',
+              }}
+            >
+              {num}
+            </span>
+            {num === '05' && (
+              <div className="w-10 h-[1px] bg-white" />
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Layer 5: Bottom Content Cluster (z-50) - UI element, unaffected by parallax */}
+      <div
+        className="absolute z-50 w-full"
+        style={{
+          bottom: '48px',
+          paddingLeft: 'clamp(24px, 5vw, 80px)',
+          paddingRight: 'clamp(24px, 5vw, 80px)',
+        }}
+      >
+        {/* Three text columns + CTA */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Three text columns */}
+          {columns.map((text, i) => (
+            <motion.p
+              key={i}
+              className="text-[13px] leading-[1.7] max-w-[320px]"
+              style={{
+                color: 'rgba(255,255,255,0.85)',
+                fontFamily: 'Inter, sans-serif',
+                textShadow: '0 2px 12px rgba(0,0,0,0.6)',
+              }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.7,
+                delay: 0.5 + i * 0.15,
+                ease: quickTransition.ease,
+              }}
+            >
+              {text}
+            </motion.p>
+          ))}
+
+          {/* SWIPE CTA */}
+          <motion.div
+            className="flex flex-col items-start self-end"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 1.0, ease: quickTransition.ease }}
+          >
+            <span
+              className="text-white text-xs font-semibold tracking-[0.15em] uppercase"
+              style={{ fontFamily: 'Inter, sans-serif' }}
+            >
+              SWIPE &gt;&gt;
+            </span>
+            <div className="mt-2 h-[2px] w-20 bg-[#FF2E2E] transition-all duration-300 hover:w-[120px]" />
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+// =============================================================================
+// 7. SRC/SECTIONS/DESTINATIONS.TSX (Destination Cards)
+//    - Re-uses your existing Destinations component.
+// =============================================================================
+
+import { motion } from 'framer-motion';
+import { quickTransition } from '../lib/motion-presets'; // Re-use motion preset
+
+const destinationsData = [ // Renamed to avoid conflict if component is named Destinations
+  {
+    rank: '1st place',
+    name: 'Nusa Lembongan island',
+    image: '/assets/dest-nusa-lembongan.jpg',
+  },
+  {
+    rank: '2nd place',
+    name: 'Pura ulun bedugul Bali',
+    image: '/assets/dest-pura-ulun.jpg',
+  },
+  {
+    rank: '3rd place',
+    name: 'Piyaynemo raja Ampat',
+    image: '/assets/dest-piyaynemo.jpg',
+  },
+  {
+    rank: '4th place',
+    name: 'Gunung Kelimutu',
+    image: '/assets/dest-kelimutu.jpg',
+  },
+];
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 60 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: quickTransition, // Use quickTransition preset
+  },
+};
+
+export default function Destinations() {
+  return (
+    <section
+      id="destination-recommendations"
+      className="relative w-full bg-[#050505]"
+      style={{
+        paddingTop: '120px',
+        paddingBottom: '80px',
+        paddingLeft: 'clamp(24px, 5vw, 80px)',
+        paddingRight: 'clamp(24px, 5vw, 80px)',
+      }}
+    >
+      <div className="max-w-[1400px] mx-auto">
+        {/* Header */}
+        <motion.div
+          className="flex flex-col items-center mb-16"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={quickTransition} // Use quickTransition preset
+        >
+          <p
+            className="text-[14px] lowercase mb-3"
+            style={{ color: '#A0A0A0', fontFamily: 'Inter, sans-serif' }}
+          >
+            confusion? These recommendation
+          </p>
+          <h2
+            className="text-white lowercase font-semibold tracking-[-0.01em] text-center"
+            style={{
+              fontSize: 'clamp(28px, 4vw, 48px)',
+              fontFamily: 'Inter, sans-serif',
+            }}
+          >
+            destination recommendations
+          </h2>
+        </motion.div>
+
+        {/* Card Grid */}
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-60px' }}
+        >
+          {destinationsData.map((dest) => ( // Use destinationsData
+            <motion.div
+              key={dest.rank}
+              className="relative overflow-hidden rounded cursor-pointer group"
+              style={{ aspectRatio: '3/4' }}
+              variants={cardVariants}
+            >
+              {/* Background Image */}
+              <img
+                src={dest.image}
+                alt={dest.name}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.06]"
+                style={{
+                  transitionTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                }}
+                loading="lazy"
+              />
+
+              {/* Glassmorphism Overlay */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    'linear-gradient(to top, rgba(5,5,5,0.85) 0%, rgba(5,5,5,0.2) 40%, transparent 60%)',
+                }}
+              />
+
+              {/* Text Content */}
+              <div className="absolute bottom-6 left-6 z-10">
+                <p
+                  className="text-white text-base font-semibold mb-1"
+                  style={{ fontFamily: 'Inter', sans-serif }}
+                >
+                  {dest.rank}
+                </p>
+                <p
+                  className="text-[13px] lowercase"
+                  style={{
+                    color: 'rgba(255,255,255,0.8)',
+                    fontFamily: 'Inter', sans-serif,
+                  }}
+                >
+                  {dest.name}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Divider */}
+        <div
+          className="w-full mt-16"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.2)' }}
+        />
+      </div>
+    </section>
+  );
+}
+
+
+// =============================================================================
+// 8. SRC/SECTIONS/TRAVELTIMELINE.TSX (Brutalist Text & Multimedia Grid)
+//    - Enhanced version of the Experience section to match "brutalist" description.
+// =============================================================================
+
+import { motion } from 'framer-motion';
+import { Play } from 'lucide-react';
+import { quickTransition } from '../lib/motion-presets'; // Re-use motion preset
+
+export default function TravelTimeLine() {
+  const mediaItems = [
+    {
+      src: '/assets/media-raja-ampat-aerial.jpg',
+      alt: 'Raja Ampat aerial view',
+    },
+    {
+      src: '/assets/media-beach-traveler.jpg',
+      alt: 'Traveler on beach',
+    },
+    {
+      src: '/public/assets/dest-kelimutu.jpg', // Example, use another relevant image
+      alt: 'Another beautiful destination',
+    },
+    {
+      src: '/public/assets/dest-pura-ulun.jpg', // Example, use another relevant image
+      alt: 'Yet another beautiful destination',
+    },
+  ];
+
+  return (
+    <section
+      id="travel-timeline"
+      className="relative w-full overflow-hidden py-24 px-clamp-24-80" // Using custom clamp utility class if available or inline styles
+      style={{
+        paddingTop: '80px',
+        paddingBottom: '120px',
+        paddingLeft: 'clamp(24px, 5vw, 80px)',
+        paddingRight: 'clamp(24px, 5vw, 80px)',
+        background: 'linear-gradient(180deg, #050505 0%, #0a0a0a 50%, #050505 100%)',
+      }}
+    >
+      <div className="max-w-[1400px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-12 relative">
+          {/* Left Column - Brutalist Text & Description */}
+          <div className="flex flex-col justify-center">
+            {/* Main Heading - Brutalist Style */}
+            <motion.h2
+              className="text-white uppercase font-display font-black leading-[0.9] tracking-[-0.03em] mb-8"
+              style={{
+                fontSize: 'clamp(48px, 8vw, 100px)', // Larger, bolder font for brutalist feel
+                fontFamily: 'Oswald, sans-serif', // Example brutalist font, ensure loaded
+                textShadow: '8px 8px 0px rgba(255,46,46,0.3)', // Strong shadow for brutalist depth
+              }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={quickTransition}
+            >
+              <span className="block">TRAVEL AND</span>
+              <span className="block">ENJOY YOUR</span>
+              <span className="block">HOLIDAY</span>
+            </motion.h2>
+
+            {/* Play Button + Label */}
+            <motion.div
+              className="flex items-center gap-3 mb-8"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{
+                duration: 0.7,
+                delay: 0.2,
+                ease: quickTransition.ease,
+              }}
+            >
+              <button className="w-14 h-14 rounded-full border-2 border-white/80 flex items-center justify-center transition-colors duration-300 hover:border-[#FF2E2E] group">
+                <Play
+                  size={20}
+                  className="text-white transition-colors duration-300 group-hover:text-[#FF2E2E] ml-0.5"
+                  fill="currentColor"
+                />
+              </button>
+              <span
+                className="text-[16px] lowercase font-bold" // Bolder label
+                style={{
+                  color: 'rgba(255,255,255,0.9)',
+                  fontFamily: 'Inter, sans-serif',
+                }}
+              >
+                Choose Your Next Adventure
+              </span>
+            </motion.div>
+
+            {/* Description */}
+            <motion.p
+              className="text-[15px] leading-[1.8] max-w-[480px]" // Slightly larger text
+              style={{ color: '#A0A0A0', fontFamily: 'Inter, sans-serif' }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{
+                duration: 0.7,
+                delay: 0.3,
+                ease: quickTransition.ease,
+              }}
+            >
+              Embark on an unforgettable journey through Indonesia's breathtaking landscapes and vibrant cultures.
+              From the serene beaches of Bali to the majestic volcanoes of Java and the underwater wonders of Raja Ampat,
+              your perfect holiday awaits. Discover hidden gems and create lasting memories with us.
+            </motion.p>
+          </div>
+
+          {/* Right Column - Multimedia Grid with Red-White Accents */}
+          <div className="relative flex items-center justify-center py-10"> {/* Added vertical padding */}
+            {/* Indonesian Flag Motif (behind cards) - More prominent accent */}
+            <motion.div
+              className="absolute z-0 hidden lg:block"
+              style={{
+                width: 'calc(100% + 80px)', // Broader flag effect
+                height: 'calc(100% + 40px)',
+                transform: 'rotate(-8deg) translateX(-20px)', // Slightly less rotation, offset
+                top: '-20px',
+                left: '-40px',
+                opacity: 0.2, // Subtle background element
+              }}
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 0.2, x: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.9, delay: 0.4 }}
+            >
+              <div
+                className="w-full h-1/2"
+                style={{ backgroundColor: '#FF2E2E' }} // Stronger red
+              />
+              <div
+                className="w-full h-1/2"
+                style={{ backgroundColor: '#FFFFFF' }} // White
+              />
+            </motion.div>
+
+            {/* Media Cards Grid */}
+            <div className="grid grid-cols-2 gap-4 relative z-10 w-full max-w-[580px]"> {/* Adjusted grid */}
+              {mediaItems.map((media, i) => (
+                <motion.div
+                  key={media.alt}
+                  className="relative overflow-hidden rounded-lg cursor-pointer group shadow-xl"
+                  style={{ aspectRatio: '4/3' }} // Adjusted aspect ratio for grid
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: '-80px' }}
+                  transition={{
+                    duration: 0.7,
+                    delay: 0.1 * i,
+                    ease: quickTransition.ease,
+                  }}
+                >
+                  <img
+                    src={media.src}
+                    alt={media.alt}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.08]"
+                    loading="lazy"
+                  />
+                  {/* Overlay */}
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent transition-opacity duration-300 group-hover:bg-black/40"
+                  />
+                  {/* Play Button */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full border-2 border-white/80 flex items-center justify-center transition-all duration-300 group-hover:border-white group-hover:bg-white/20">
+                      <Play
+                        size={24}
+                        className="text-white ml-0.5"
+                        fill="currentColor"
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Credit (retained) */}
+        <motion.div
+          className="flex justify-end mt-16"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.6 }}
+        >
+          <a
+            href="https://instagram.com/algyspace_"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] transition-colors duration-200 hover:opacity-70"
+            style={{
+              color: 'rgba(255,255,255,0.4)',
+              fontFamily: 'Inter, sans-serif',
+            }}
+          >
+            http://instagram.com/algyspace_
+          </a>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
