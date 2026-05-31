@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
 import { Play } from 'lucide-react';
+import ScrollReveal from '../components/ScrollReveal';
+import DecayCard from '@/components/DecayCard';
 
 export default function Experience() {
   return (
     <section
-      id="experience-showcase"
+      id="about"
       className="relative w-full overflow-hidden"
       style={{
         paddingTop: '80px',
@@ -19,20 +21,39 @@ export default function Experience() {
           {/* Left Column */}
           <div className="flex flex-col justify-center">
             {/* Main Heading */}
-            <motion.h2
-              className="text-white uppercase font-display font-bold leading-[1.05] tracking-[-0.01em] mb-8"
-              style={{
-                fontSize: 'clamp(36px, 5vw, 64px)',
-              }}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+        <motion.h2
+          className="text-white uppercase font-display font-bold leading-[1.05] tracking-[-0.01em] mb-8"
+          style={{
+            fontSize: 'clamp(36px, 5vw, 64px)',
+          }}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+          <span className="block">
+            <ScrollReveal
+              baseOpacity={0.1}
+              enableBlur
+              baseRotation={3}
+              blurStrength={4}
             >
-              <span className="block">TRAVEL AND</span>
-              <span className="block">ENJOY YOUR</span>
-              <span className="block">HOLIDAY</span>
-            </motion.h2>
+              BERBAGI MANFAAT
+            </ScrollReveal>
+          </span>
+
+          <span className="block">
+            <ScrollReveal
+              baseOpacity={0.1}
+              enableBlur
+              baseRotation={3}
+              blurStrength={4}
+            >
+              JELAJAHI KEBAIKAN
+            </ScrollReveal>
+          </span>
+
+        </motion.h2>
 
             {/* Play Button + Label */}
             <motion.div
@@ -60,7 +81,7 @@ export default function Experience() {
                   fontFamily: 'Inter, sans-serif',
                 }}
               >
-                choose your fun holiday
+                lihat dokumentasi kegiatan
               </span>
             </motion.div>
 
@@ -77,91 +98,52 @@ export default function Experience() {
                 ease: [0.25, 0.46, 0.45, 0.94],
               }}
             >
-              The Raja Ampat Islands are a group of islands located in the western
-              part of the Bird's Head Peninsula on the island of New Guinea.
-              Administratively, this cluster is under Raja Ampat Regency and Soron
-              City
+              Amanah dari para muhsinin yang telah kami sampaikan langsung kepada yang berhak. 
+              Bergerak menyusuri berbagai wilayah untuk menghadirkan senyum di tengah masyarakat.
             </motion.p>
           </div>
 
           {/* Right Column - Media Cluster */}
-          <div className="relative flex items-center justify-center">
-            {/* Indonesian Flag Motif (behind cards) */}
-            <motion.div
-              className="absolute z-0 hidden lg:block"
-              style={{
-                width: '300px',
-                height: '160px',
-                transform: 'rotate(-15deg)',
-                top: '50%',
-                left: '10%',
-                marginTop: '-80px',
-              }}
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.7, delay: 0.5 }}
-            >
-              <div
-                className="w-full h-1/2"
-                style={{ backgroundColor: 'rgba(255,46,46,0.15)' }}
-              />
-              <div
-                className="w-full h-1/2"
-                style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
-              />
-            </motion.div>
+      {/* Right Column - Media Cluster */}
+      <div className="relative flex items-center justify-center">
+        
+        {/* INDONESIAN FLAG MOTIF SEBELUMNYA DI SINI SUDAH DIAPUS PERMANEN, BERSIH! */}
 
-            {/* Media Cards */}
-            <div className="flex gap-4 relative z-10">
-              {[
-                {
-                  src: 'https://ahsan.tv/wp-content/uploads/2026/05/media-raja-ampat-aerial.webp',
-                  alt: 'Raja Ampat aerial view',
-                },
-                {
-                  src: 'https://ahsan.tv/wp-content/uploads/2026/05/media-beach-traveler.webp',
-                  alt: 'Traveler on beach',
-                },
-              ].map((media, i) => (
-                <motion.div
-                  key={media.alt}
-                  className="relative overflow-hidden rounded cursor-pointer group"
-                  style={{ width: '280px', aspectRatio: '16/10' }}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: '-80px' }}
-                  transition={{
-                    duration: 0.7,
-                    delay: 0.15 * i,
-                    ease: [0.25, 0.46, 0.45, 0.94],
-                  }}
-                >
-                  <img
-                    src={media.src}
-                    alt={media.alt}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                    loading="lazy"
-                  />
-                  {/* Overlay */}
-                  <div
-                    className="absolute inset-0 transition-opacity duration-300"
-                    style={{ backgroundColor: 'rgba(5,5,5,0.3)' }}
-                  />
-                  {/* Play Button */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-14 h-14 rounded-full border-[1.5px] border-white/80 flex items-center justify-center transition-all duration-300 group-hover:border-white group-hover:bg-white/10">
-                      <Play
-                        size={20}
-                        className="text-white ml-0.5"
-                        fill="currentColor"
-                      />
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+<div className="flex gap-4 relative z-10 bg-transparent">
+  {[
+    {
+      src: 'https://ahsan.tv/wp-content/uploads/2026/05/footer.webp',
+      alt: 'Footer',
+      seed: 10
+    },
+  ].map((media, i) => (
+    <motion.div
+      key={media.alt}
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{
+        duration: 0.7,
+        delay: 0.15 * i,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }}
+    >
+      <DecayCard 
+        width={400} // Ukuran tampilan kotak di layar, silakan set sesuai kebutuhan layoutmu (misal 300, 400, dll.)
+        height={400} // Dibikin sama dengan width biar 1:1 sesuai rasio gambar asli 960*960
+        image={media.src}
+        seed={media.seed}
+        maxDisplacement={350}
+        movementBound={40}
+      >
+        {/* Sisa Overlay Kegelapan tipis khas brutalist (Ikon play sudah dihapus total) */}
+        <div className="absolute inset-0 transition-opacity duration-300 bg-black/20 group-hover:bg-black/10" />
+      </DecayCard>
+    </motion.div>
+  ))}
+</div>
+
+      </div>
         </div>
 
         {/* Footer Credit */}
@@ -173,7 +155,7 @@ export default function Experience() {
           transition={{ duration: 0.7, delay: 0.6 }}
         >
           <a
-            href="https://instagram.com/algyspace_"
+            href="https://www.instagram.com/ahsantv"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[11px] transition-colors duration-200 hover:opacity-70"
@@ -182,7 +164,7 @@ export default function Experience() {
               fontFamily: 'Inter, sans-serif',
             }}
           >
-            http://instagram.com/algyspace_
+            http://www.instagram.com/ahsantv
           </a>
         </motion.div>
       </div>

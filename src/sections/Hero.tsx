@@ -28,13 +28,11 @@ import { SplitText } from '../components/ui/ReactBits/SplitText';
 const LINEAR = [0, 0, 1, 1] as const;
 
 const COLUMNS = [
-  'Mount Kelimutu is a volcano on Flores Island, NTT Province. Its three coloured crater lakes shift hue with the volcanic mood beneath.',
-  'Nusa Penida Island sits in the southeastern part of the Balinese mainland, ringed by dramatic cliffs that plunge into the turquoise Indian Ocean.',
-  "The Raja Ampat archipelago shelters the world's most biodiverse coral reef, spread across 1,500 islets in western Papua's Bird's Head Peninsula.",
+  'Siapa yang menyelesaikan kesulitan seorang mukmin dari berbagai kesulitan-kesulitan dunia, niscaya Allah akan memudahkan kesulitan-kesulitannya pada hari Kiamat.',
+  'melalui program peduli armalah, setiap uluran tangan hadir untuk merajut kembali harapan mereka yang membutuhkan. bersama ahsan tv, mari menjadi jembatan kebaikan yang menghadirkan senyuman dan meringankan beban sesama di setiap langkah nyata.',
+  "ahsan tv peduli bergerak bersama masyarakat untuk mengalirkan bantuan dan kepedulian kepada anak yatim serta kaum dhuafa. mari dukung aksi kemanusiaan ini demi menciptakan masa depan yang lebih baik dan penuh berkah.",
 ];
 
-const SLIDE_NUMS = ['03', '04', '05', '06', '07'] as const;
-const ACTIVE_SLIDE = '05';
 
 export default function Hero() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -69,7 +67,7 @@ export default function Hero() {
       {/* PLANE 0 — Background Sky (z-0) */}
       <motion.div className="absolute inset-0 z-0" style={{ y: bgY, ...gpu }}>
         <img
-          src="https://ahsan.tv/wp-content/uploads/2026/05/hero-volcanic-landscape.webp"
+          src="https://ahsan.tv/wp-content/uploads/2026/05/AHSANTV.webp"
           alt="Indonesian volcanic landscape"
           className="w-full h-full object-cover"
           style={{ objectPosition: 'center 30%' }}
@@ -98,7 +96,7 @@ export default function Hero() {
           overflow: 'visible',
         }}
       >
-        {(['VISIT', 'INDONESIA'] as const).map((word, wi) => (
+        {(['AHSANTV', 'PEDULI'] as const).map((word, wi) => (
           <div
             key={word}
             className="block leading-[0.82]"
@@ -162,33 +160,6 @@ export default function Hero() {
         className="absolute inset-0 z-30 pointer-events-none"
         style={{ opacity: uiOp, y: uiY, ...gpu }}
       >
-        {/* Vertical slide indicators — right rail */}
-        <div
-          className="absolute hidden md:flex flex-col items-end gap-3 pointer-events-auto"
-          style={{ right: '28px', top: '50%', transform: 'translateY(-50%)' }}
-        >
-          {SLIDE_NUMS.map((num) => {
-            const active = num === ACTIVE_SLIDE;
-            return (
-              <div key={num} className="flex items-center gap-2">
-                {active && (
-                  <div style={{ width: 40, height: 1, background: '#ffffff' }} />
-                )}
-                <span
-                  style={{
-                    fontFamily: 'Inter, sans-serif',
-                    fontSize: '13px',
-                    fontWeight: active ? 700 : 400,
-                    color: active ? '#ffffff' : 'rgba(255,255,255,0.4)',
-                    letterSpacing: '0.06em',
-                  }}
-                >
-                  {num}
-                </span>
-              </div>
-            );
-          })}
-        </div>
 
         {/* Bottom text columns + SWIPE CTA */}
         <div
@@ -227,16 +198,6 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.75, delay: 1.55, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <span
-                className="text-white text-xs font-bold tracking-[0.18em] uppercase"
-                style={{ fontFamily: 'Inter, sans-serif' }}
-              >
-                SWIPE &gt;&gt;
-              </span>
-              <div
-                className="mt-2 h-[2px] bg-[#FF2E2E] transition-all duration-500 hover:w-[120px]"
-                style={{ width: '72px' }}
-              />
             </motion.div>
           </div>
         </div>
