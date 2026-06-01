@@ -66,7 +66,8 @@ const uiY   = useTransform(scrollYProgress, [0, 0.45], ['0%', '-18%']);
       {/* PLANE 0 — Background Sky (z-0) */}
       <motion.div className="absolute inset-0 z-0" style={{ y: bgY, ...gpu }}>
       <video
-        src="https://ahsan.tv/wp-content/uploads/2026/06/gojoo.webm"
+        src="https://ahsan.tv/wp-content/uploads/2026/06/ahsan.webm"
+        poster="https://media.ahsan.tv/assets/AHSANTV.webp"
         className="w-full h-full object-cover"
         style={{ objectPosition: 'center 30%' }}
         autoPlay
