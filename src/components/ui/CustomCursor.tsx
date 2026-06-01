@@ -13,7 +13,7 @@
  * Fully unmounts on touch/mobile viewports via pointer:coarse media query.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, useSpring, type SpringOptions } from 'framer-motion';
 
 const SPRING: SpringOptions = { stiffness: 300, damping: 28, mass: 0.5 };

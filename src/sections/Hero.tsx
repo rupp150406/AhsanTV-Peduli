@@ -25,7 +25,6 @@ import {
   type MotionStyle,
 } from 'framer-motion';
 import { SplitText } from '../components/ui/ReactBits/SplitText';
-const LINEAR = [0, 0, 1, 1] as const;
 
 const COLUMNS = [
   'Siapa yang menyelesaikan kesulitan seorang mukmin dari berbagai kesulitan-kesulitan dunia, niscaya Allah akan memudahkan kesulitan-kesulitannya pada hari Kiamat.',

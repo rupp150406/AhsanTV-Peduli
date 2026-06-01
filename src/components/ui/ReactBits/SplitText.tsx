@@ -25,8 +25,8 @@
  *   animate     — override animate state externally ('hidden' | 'visible')
  */
 
-import { motion, type Variants, type HTMLMotionProps } from 'framer-motion';
-import { useMemo } from 'react';
+import { motion, type Variants } from 'framer-motion';
+import { useMemo, type JSX } from 'react';
 
 interface SplitTextProps {
   text: string;

@@ -8,7 +8,7 @@ import {
   MarkerPopup,
 } from "@/components/ui/map";
 import { Button } from "@/components/ui/button";
-import { Navigation, Lock, Minus, Plus } from "lucide-react";
+import { Navigation, Lock,} from "lucide-react";
 import { TiltedCard } from '../components/ui/ReactBits/TiltedCard';
 // import BorderGlow from '../components/BorderGlow';
 
