@@ -82,7 +82,7 @@ export default function Destinations() {
         >
           <GradientText
             colors={["#1F4326","#46751C","#8FC325"]}
-            animationSpeed={2}
+            animationSpeed={1}
             showBorder={false}
           >
             Bingung? Ini rekomendasinya
@@ -235,7 +235,7 @@ export default function Destinations() {
         texts={['AhsanTV', 'Peduli']}
         velocity={100}
         className="custom-scroll-text"
-        numCopies={10}
+        numCopies={12}
         damping={50}
         stiffness={100}
       />

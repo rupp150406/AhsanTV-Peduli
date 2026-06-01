@@ -49,11 +49,11 @@ export default function Hero() {
     offset: ['start start', 'end start'],
   });
 
-  const bgY   = useTransform(scrollYProgress, [0, 1], ['0%', '+25%'], { ease: LINEAR });
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '-60%'], { ease: LINEAR });
-  const fgY   = useTransform(scrollYProgress, [0, 1], ['0%', '-8%' ], { ease: LINEAR });
-  const uiOp  = useTransform(scrollYProgress, [0, 0.45], [1, 0],         { ease: LINEAR });
-  const uiY   = useTransform(scrollYProgress, [0, 0.45], ['0%', '-18%'], { ease: LINEAR });
+const bgY   = useTransform(scrollYProgress, [0, 1], ['0%', '+25%']);
+const textY = useTransform(scrollYProgress, [0, 1], ['0%', '-60%']);
+const fgY   = useTransform(scrollYProgress, [0, 1], ['0%', '-8%']);
+const uiOp  = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
+const uiY   = useTransform(scrollYProgress, [0, 0.45], ['0%', '-18%']);
 
   const gpu: MotionStyle = { willChange: 'transform' };
 
@@ -66,13 +66,15 @@ export default function Hero() {
     >
       {/* PLANE 0 — Background Sky (z-0) */}
       <motion.div className="absolute inset-0 z-0" style={{ y: bgY, ...gpu }}>
-        <img
-          src="https://ahsan.tv/wp-content/uploads/2026/05/AHSANTV.webp"
-          alt="Indonesian volcanic landscape"
-          className="w-full h-full object-cover"
-          style={{ objectPosition: 'center 30%' }}
-          loading="eager"
-        />
+      <video
+        src="https://ahsan.tv/wp-content/uploads/2026/06/gojoo.webm"
+        className="w-full h-full object-cover"
+        style={{ objectPosition: 'center 30%' }}
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
         <div
           className="absolute inset-0"
           style={{
@@ -113,7 +115,7 @@ export default function Hero() {
           >
             <SplitText
               text={word}
-              delay={word === 'VISIT' ? 0.045 : 0.038}
+              delay={word === 'AHSANTV' ? 0.045 : 0.038}
               duration={0.7}
               animate={titleAnimate}
               style={{

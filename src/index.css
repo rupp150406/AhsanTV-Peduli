@@ -1,3 +1,4 @@
+@import url('https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -54,5 +55,11 @@
 
   .lenis.lenis-scrolling iframe {
     pointer-events: none;
+  }
+  .maplibregl-popup-content {
+    @apply bg-transparent! shadow-none! p-0! rounded-none!;
+  }
+  .maplibregl-popup-tip {
+    @apply hidden!;
   }
 }

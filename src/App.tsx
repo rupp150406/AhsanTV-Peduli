@@ -12,6 +12,9 @@ import Destinations from './sections/Destinations';
 import Experience from './sections/Experience';
 import Footer from './sections/Footer';
 import { CustomCursor } from './components/ui/CustomCursor';
+import { AhsanMap } from './components/AhsanMap'; 
+
+
 
 // Import ClickSpark asli bawaan ReactBits kamu
 import ClickSpark from './components/ui/ReactBits/ClickSpark'; 
@@ -24,14 +27,13 @@ export default function App() {
       lerp: 0.08,
       smoothWheel: true,
       duration: 1.2,
-      smoothTouch: false,
     });
 
     lenisRef.current = lenis;
 
     // Pasang instance ke window global agar terbaca oleh Navbar
     window.__lenis = lenis;
-    window.lenis = lenis;
+    window.__lenis = lenis;
 
     function raf(time: number) {
       lenis.raf(time);
@@ -43,7 +45,7 @@ export default function App() {
     return () => {
       lenis.destroy();
       window.__lenis = undefined;
-      window.lenis = undefined;
+      window.__lenis = undefined;
     };
   }, []);
 
@@ -74,6 +76,7 @@ export default function App() {
         <main className="relative z-10 w-full">
           <Hero />
           <Destinations />
+          <AhsanMap />
           <Experience />
           <Footer />
         </main>

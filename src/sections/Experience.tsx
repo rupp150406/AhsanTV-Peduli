@@ -68,11 +68,13 @@ export default function Experience() {
               }}
             >
               <button className="w-12 h-12 rounded-full border border-white/80 flex items-center justify-center transition-colors duration-300 hover:border-[#FF2E2E] group">
+                <a href="https://www.youtube.com/watch?v=SPQvhh7hVow" target="_blank" rel="noopener noreferrer">
                 <Play
                   size={16}
                   className="text-white transition-colors duration-300 group-hover:text-[#FF2E2E] ml-0.5"
                   fill="currentColor"
                 />
+                </a>
               </button>
               <span
                 className="text-[14px] lowercase"
