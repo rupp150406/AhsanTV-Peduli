@@ -235,7 +235,7 @@ export default function Destinations() {
         texts={['AhsanTV', 'Peduli']}
         velocity={100}
         className="custom-scroll-text"
-        numCopies={6}
+        numCopies={12}
         damping={50}
         stiffness={100}
       />
