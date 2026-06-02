@@ -45,7 +45,7 @@ const places: Place[] = [
     reviews: 128,
     hours: "Investment active",
     image:
-      "https://ahsan.tv/wp-content/uploads/2026/05/lapangan.webp?w=300&h=200&fit=crop",
+      "https://ahsan.tv/wp-content/uploads/2026/06/lapangann.webp",
       lat: -6.26188,
       lng: 107.11845,
     status: "unlocked",
@@ -114,14 +114,6 @@ export function AhsanMap() {
                     </p>
                   </div>
 
-                  {/* Kanan: Tombol Directions */}
-                  <Button
-                    size="sm"
-                    className="h-8 shrink-0 gap-1.5 rounded-full border border-white/20 bg-black/40 px-3 text-xs text-white backdrop-blur-md transition-colors hover:bg-black/60"
-                  >
-                    <Navigation className="h-3.5 w-3.5" />
-                    Lihat
-                  </Button>
                 </div>
               </div>
             </MarkerPopup>
