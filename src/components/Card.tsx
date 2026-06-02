@@ -12,7 +12,6 @@
 
 "use client";
 
-import React from "react";
 import { Star, Zap, Music } from "lucide-react";
 import { IOSAppStoreCard } from "@/components/ui/IOSAppStoreCard"; // sesuaikan path
 
