@@ -88,7 +88,7 @@ function DocModal({
         style={{ scrollbarWidth: 'none' }}
       >
         {/* Hero area */}
-        <div className="relative flex h-[45vh] w-full flex-col justify-end p-6">
+        <div className="relative flex h-[45vh] w-full flex-col justify-end p-6" >
           <motion.img
             layoutId={`card-image-${card.rank}`}
             transition={spring}
@@ -100,16 +100,9 @@ function DocModal({
           {/* Gradient legibility */}
           <div
             className="absolute inset-0 pointer-events-none"
-            style={{ background: 'linear-gradient(to top, rgba(28,28,30,0.95) 0%, rgba(28,28,30,0.3) 50%, transparent 75%)' }}
           />
 
           {/* Close button */}
-          <button
-            onClick={(e) => { e.stopPropagation(); onClose(); }}
-            className="absolute top-5 right-5 z-50 rounded-full bg-black/40 p-2 text-white backdrop-blur-md transition-transform hover:scale-105 active:scale-95"
-          >
-            <X className="h-5 w-5" />
-          </button>
 
           {/* Judul mengambang di atas gambar */}
           <div className="relative z-10">
@@ -124,7 +117,7 @@ function DocModal({
             <motion.h2
               layoutId={`card-title-${card.rank}`}
               transition={spring}
-              className="mt-1 text-3xl font-extrabold leading-tight text-white md:text-4xl drop-shadow-md"
+              className="mt-1 text-3xl font-extrabold leading-tight text-white md:text-4xl [text-shadow:_0_2px_4px_rgba(0,0,0,0.8),_0_6px_12px_rgba(0,0,0,0.6)]"
               style={{ fontFamily: 'Inter, sans-serif' }}
             >
               {card.name}
@@ -154,7 +147,9 @@ function DocModal({
           style={{ fontFamily: 'Inter, sans-serif' }}
         >
           <p>{card.desc}</p>
+          
         </motion.div>
+        
       </motion.div>
     </div>
   );
@@ -254,7 +249,7 @@ export default function Destinations() {
             animationSpeed={1}
             showBorder={false}
           >
-            Bingung? Ini rekomendasinya
+            Karena Peduli Adalah Solusi
           </GradientText>
 
           <div className="mb-12 flex justify-center">
@@ -269,7 +264,7 @@ export default function Destinations() {
             >
               <VariableProximity
                 containerRef={containerRef}
-                label="Dokumentasi Armalah"
+                label="AHSANTV PEDULI NEWS"
                 fromFontVariationSettings="'wght' 400, 'slnt' 0"
                 toFontVariationSettings="'wght' 900, 'slnt' -10"
                 radius={100}
@@ -420,13 +415,6 @@ export default function Destinations() {
                       />
 
                       {/* CTA badge */}
-                      <motion.div
-                        layoutId={`card-cta-${item.rank}`}
-                        transition={spring}
-                        className="absolute bottom-5 right-5 z-20 rounded-full bg-white/15 px-4 py-1 text-[11px] font-bold text-white backdrop-blur-md"
-                      >
-                        LIHAT
-                      </motion.div>
                     </TiltedCard>
                   </motion.div>
                 );
