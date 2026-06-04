@@ -18,7 +18,6 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
 import { TiltedCard } from '../components/ui/ReactBits/TiltedCard';
 import ScrollVelocity from '../components/ScrollVelocity';
 import VariableProximity from '../components/VariableProximity';
